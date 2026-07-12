@@ -1,0 +1,90 @@
+/**
+ * CSS-переменные (дизайн-токены) проекта "Хитовая Песня"
+ * Путь: /public/assets/css/variables.css
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=Manrope:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap');
+
+:root {
+    /* ─── Цвета ─── */
+    --color-primary:       #8B1E3F;
+    --color-primary-dark:  #6B1230;
+    --color-primary-light: #A83255;
+
+    --color-accent:        #D4A574;
+    --color-accent-light:  #F0E6D2;
+    --color-accent-dark:   #B8864E;
+
+    --color-bg:            #F5EFE6;
+    --color-bg-white:      #FFFFFF;
+    --color-bg-section:    #FAF6F0;
+
+    --color-text:          #2C1810;
+    --color-text-muted:    #6B5D54;
+    --color-text-light:    #9A8880;
+
+    --color-border:        #E8D5B7;
+    --color-border-light:  #F0E6D2;
+
+    --color-success:       #4A7C59;
+    --color-error:         #B33951;
+
+    /* ─── Типографика ─── */
+    --font-heading:  'Unbounded', sans-serif;
+    --font-body:     'Manrope', sans-serif;
+    --font-accent:   'Cormorant Garamond', serif;
+
+    --font-size-base:  16px;
+    --font-size-sm:    14px;
+    --font-size-xs:    12px;
+    --font-size-lg:    18px;
+    --font-size-xl:    20px;
+
+    --font-size-h1:    clamp(32px, 5vw, 56px);
+    --font-size-h2:    clamp(28px, 4vw, 44px);
+    --font-size-h3:    clamp(20px, 3vw, 30px);
+    --font-size-h4:    clamp(18px, 2.5vw, 24px);
+
+    --font-weight-normal:   400;
+    --font-weight-medium:   500;
+    --font-weight-semibold: 600;
+    --font-weight-bold:     700;
+    --font-weight-black:    800;
+
+    --line-height-tight:   1.2;
+    --line-height-normal:  1.6;
+    --line-height-relaxed: 1.8;
+
+    /* ─── Отступы ─── */
+    --space-xs:  8px;
+    --space-sm:  16px;
+    --space-md:  24px;
+    --space-lg:  32px;
+    --space-xl:  48px;
+    --space-2xl: 64px;
+    --space-3xl: 96px;
+
+    /* ─── Скругления ─── */
+    --radius-xs:   6px;
+    --radius-sm:   10px;
+    --radius-md:   12px;
+    --radius-lg:   16px;
+    --radius-xl:   20px;
+    --radius-full: 9999px;
+
+    /* ─── Тени ─── */
+    --shadow-sm:  0 4px 20px rgba(139, 30, 63, 0.08);
+    --shadow-md:  0 8px 30px rgba(139, 30, 63, 0.12);
+    --shadow-lg:  0 15px 40px rgba(139, 30, 63, 0.15);
+
+    /* ─── Анимации ─── */
+    --transition-base:   all 0.3s ease;
+    --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* ─── Сетка ─── */
+    --container-width: 1200px;
+    --container-pad:   var(--space-sm);
+
+    /* ─── Шапка ─── */
+    --header-height: 72px;
+}

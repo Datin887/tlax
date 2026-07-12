@@ -1,0 +1,99 @@
+/* Main styles - Хитовая Песня */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base, 16px);
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-bg);
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-sm); }
+
+a { color: var(--color-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn--primary { background: var(--color-primary); color: #fff; }
+.btn--primary:hover { background: var(--color-primary-dark); }
+
+.btn--secondary { background: var(--color-accent); color: #fff; }
+.btn--white { background: #fff; color: var(--color-primary); }
+
+.btn--lg { padding: 16px 32px; font-size: 18px; }
+
+.header { background: var(--color-bg-white); padding: var(--space-sm) 0; border-bottom: 1px solid var(--color-border, #eee); }
+.header__container { display: flex; justify-content: space-between; align-items: center; }
+
+.logo { font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--color-primary); }
+
+.nav a { margin-left: var(--space-md); color: var(--color-text); }
+.nav a.active { color: var(--color-primary); font-weight: 600; }
+
+.hero {
+    padding: var(--space-3xl) 0;
+    text-align: center;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: #fff;
+}
+
+.hero__subtitle { font-size: 20px; max-width: 600px; margin: var(--space-md) auto; opacity: 0.9; }
+.hero__actions { margin-top: var(--space-lg); }
+.hero__actions .btn { margin: 0 8px; }
+
+.section { padding: var(--space-3xl) 0; }
+.section-title { font-family: var(--font-heading); font-size: var(--font-size-h2); text-align: center; margin-bottom: var(--space-xl); }
+
+.grid { display: grid; gap: var(--space-lg); }
+.grid--3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.grid--4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+.category-card {
+    background: var(--color-bg-white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    text-align: center;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.category-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.category-card__emoji { font-size: 48px; margin-bottom: var(--space-sm); }
+.category-card__name { font-weight: 600; }
+
+.tariff-card {
+    background: var(--color-bg-white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+.tariff-card:hover { transform: translateY(-5px); }
+.tariff-card__name { font-family: var(--font-heading); font-size: 24px; margin-bottom: var(--space-sm); }
+.tariff-card__price { font-size: 32px; font-weight: 700; color: var(--color-primary); margin-bottom: var(--space-lg); }
+
+.section--primary { background: var(--color-primary); color: #fff; }
+
+.footer { background: var(--color-text); color: #999; padding: var(--space-xl) 0 0; }
+.footer__top { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-xl); }
+.footer__top h4 { color: #fff; margin-bottom: var(--space-sm); }
+.footer__top a { color: #999; display: block; margin: 4px 0; }
+.footer__bottom { text-align: center; padding: var(--space-lg) 0; margin-top: var(--space-xl); border-top: 1px solid #444; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header__container { flex-direction: column; gap: var(--space-sm); }
+    .nav a { margin: 0 8px; }
+    .hero { padding: var(--space-xl) 0; }
+    .hero h1 { font-size: 28px; }
+}
