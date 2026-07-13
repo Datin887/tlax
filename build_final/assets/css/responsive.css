@@ -1,0 +1,339 @@
+/**
+ * Адаптивные стили (mobile-first подход)
+ * Брейкпоинты: 480, 640, 768, 1024, 1200
+ * 
+ * Путь: /public/assets/css/responsive.css
+ */
+
+/* ═══════════════════════════════════════
+   480px — Маленькие телефоны
+═══════════════════════════════════════ */
+
+@media (max-width: 480px) {
+    .hero__stats {
+        gap: var(--space-lg);
+    }
+
+    .hero__actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .hero__actions .btn {
+        text-align: center;
+    }
+
+    .btn--xl {
+        padding: 16px 28px;
+        font-size: var(--font-size-lg);
+    }
+
+    .wizard__progress {
+        gap: 0;
+    }
+
+    .wizard__step-label {
+        display: none;
+    }
+
+    .wizard__body {
+        padding: var(--space-md);
+    }
+}
+
+/* ═══════════════════════════════════════
+   640px — Мобильные
+═══════════════════════════════════════ */
+
+@media (max-width: 640px) {
+    /* Шапка */
+    .nav { display: none; }
+    .header__cta { display: none; }
+    .burger { display: flex; }
+    .mobile-menu { display: flex; }
+
+    /* Hero */
+    .hero {
+        min-height: 85vh;
+        padding-block: var(--space-2xl);
+    }
+
+    .hero__pretitle {
+        font-size: 11px;
+    }
+
+    /* Шаги */
+    .steps {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+
+    .steps::before {
+        display: none;
+    }
+
+    /* Треки */
+    .tracks-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Преимущества */
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Отзывы */
+    .reviews-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Footer */
+    .footer__grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+    }
+
+    .footer__bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Pricing */
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pricing-card--featured {
+        transform: none;
+        order: -1;
+    }
+
+    .pricing-card--featured:hover {
+        transform: translateY(-6px);
+    }
+
+    /* Wizard */
+    .wizard__step-label {
+        font-size: 10px;
+    }
+
+    .wizard__step-dot {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+
+    .wizard__step-line {
+        min-width: 16px;
+    }
+
+    /* Контакты */
+    .contacts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Фильтры */
+    .filter-bar {
+        gap: 6px;
+    }
+
+    .filter-btn {
+        padding: 7px 14px;
+        font-size: var(--font-size-xs);
+    }
+
+    /* Toast */
+    .toast-container {
+        bottom: var(--space-sm);
+        right: var(--space-sm);
+        left: var(--space-sm);
+        width: auto;
+    }
+
+    /* Section */
+    .section {
+        padding-block: var(--space-2xl);
+    }
+
+    .section-header {
+        margin-bottom: var(--space-xl);
+    }
+
+    /* FAQ */
+    .faq-item__btn {
+        padding: var(--space-sm) var(--space-md);
+        font-size: var(--font-size-sm);
+    }
+
+    .faq-item__text {
+        padding: 0 var(--space-md) var(--space-sm);
+    }
+}
+
+/* ═══════════════════════════════════════
+   768px — Планшеты портрет
+═══════════════════════════════════════ */
+
+@media (min-width: 641px) and (max-width: 768px) {
+    /* Шапка */
+    .nav { display: none; }
+    .header__cta { display: none; }
+    .burger { display: flex; }
+    .mobile-menu { display: flex; }
+
+    /* Сетки */
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    .steps::before {
+        display: none;
+    }
+
+    .tracks-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .reviews-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pricing-card--featured {
+        transform: none;
+        border-width: 3px;
+    }
+
+    .footer__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ═══════════════════════════════════════
+   1024px — Планшеты ландшафт / маленькие ноуты
+═══════════════════════════════════════ */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* Показываем навигацию, скрываем бургер */
+    .burger { display: none; }
+    .mobile-menu { display: none !important; }
+
+    .nav__link {
+        padding: 7px 10px;
+        font-size: 13px;
+    }
+
+    /* Сетки */
+    .tracks-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .reviews-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pricing-card--featured {
+        transform: none;
+        order: -1;
+        grid-column: span 2;
+        max-width: 400px;
+        margin-inline: auto;
+        width: 100%;
+    }
+
+    .footer__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ═══════════════════════════════════════
+   1200px+ — Десктоп
+═══════════════════════════════════════ */
+
+@media (min-width: 1025px) {
+    .burger { display: none; }
+    .mobile-menu { display: none !important; }
+
+    /* Все сетки — 3 колонки */
+    .steps { grid-template-columns: repeat(3, 1fr); }
+    .tracks-grid { grid-template-columns: repeat(3, 1fr); }
+    .features-grid { grid-template-columns: repeat(3, 1fr); }
+    .reviews-grid { grid-template-columns: repeat(3, 1fr); }
+    .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+    .footer__grid { grid-template-columns: 1.5fr 1fr 1fr 1fr; }
+}
+
+/* ═══════════════════════════════════════
+   PRINT
+═══════════════════════════════════════ */
+
+@media print {
+    .header,
+    .footer,
+    .burger,
+    .mobile-menu,
+    .hero__decor,
+    .cta-section__decor {
+        display: none !important;
+    }
+
+    .hero {
+        background: var(--color-primary) !important;
+        min-height: auto;
+        padding-block: var(--space-xl);
+    }
+
+    * {
+        box-shadow: none !important;
+    }
+
+    a[href]::after {
+        content: ' (' attr(href) ')';
+        font-size: 11px;
+        color: var(--color-text-muted);
+    }
+}
+
+/* ═══════════════════════════════════════
+   PREFERS-REDUCED-MOTION
+═══════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* ═══════════════════════════════════════
+   DARK MODE (опционально, минимальный)
+═══════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+    /* Намеренно не реализуем — сайт имеет тёплый фирменный стиль,
+       который не предполагает тёмную тему */
+}

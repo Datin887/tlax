@@ -1,0 +1,42 @@
+/**
+ * Адаптивные стили
+ * Путь: /public/assets/css/responsive.css
+ */
+
+@import url('main.css');
+
+/* Мобильные стили (по умолчанию) */
+@media (max-width: 767px) {
+    .nav {
+        display: none;
+    }
+
+    .header__menu-btn {
+        display: block;
+    }
+
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+
+    .grid--2,
+    .grid--3,
+    .grid--4 {
+        grid-template-columns: 1fr;
+    }
+
+    .stepper__title {
+        font-size: 10px;
+    }
+}
+
+/* Планшеты */
+@media (min-width: 768px) {
+    .header__menu-btn {
+        display: none;
+    }
+}

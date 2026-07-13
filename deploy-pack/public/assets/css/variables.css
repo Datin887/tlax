@@ -1,0 +1,31 @@
+/* CSS Variables - Хитовая Песня */
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Цвета */
+    --color-primary: #8B1E3F;
+    --color-primary-dark: #6B1230;
+    --color-accent: #D4A574;
+    --color-bg: #F5EFE6;
+    --color-bg-white: #FFFFFF;
+    --color-text: #2C1810;
+    --color-text-muted: #6B5D54;
+    --color-error: #B33951;
+    --color-success: #4A7C59;
+    
+    /* Шрифты */
+    --font-heading: 'Unbounded', sans-serif;
+    --font-body: 'Manrope', sans-serif;
+    
+    /* Размеры */
+    --space-sm: 16px;
+    --space-md: 24px;
+    --space-lg: 32px;
+    --space-xl: 48px;
+    
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    
+    --font-size-h1: clamp(32px, 5vw, 56px);
+    --font-size-h2: clamp(28px, 4vw, 44px);
+}

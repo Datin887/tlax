@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Redirect root to public for clean URLs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ /public/$1 [L]
+
+# Admin access
+RewriteRule ^admin/?$ /admin/index.php [L]
