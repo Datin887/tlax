@@ -344,11 +344,6 @@ require_once __DIR__ . '/includes/header.php';
                                             🎭 <?= h($track['mood']) ?>
                                         </span>
                                     <?php endif; ?>
-                                    <?php if (!empty($track['voice_type'])): ?>
-                                        <span class="track-card__meta-item">
-                                            🎤 <?= h($track['voice_type']) ?>
-                                        </span>
-                                    <?php endif; ?>
                                 </div>
 
                                 <!-- Плеер -->

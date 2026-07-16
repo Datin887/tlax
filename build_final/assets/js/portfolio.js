@@ -218,11 +218,6 @@
                             🎭 ${escHtml(track.mood)}
                         </span>
                     ` : ''}
-                    ${track.voice_type ? `
-                        <span class="track-card__meta-item" title="Голос">
-                            🎤 ${escHtml(track.voice_type)}
-                        </span>
-                    ` : ''}
                 </div>
 
                 <!-- Плеер -->
