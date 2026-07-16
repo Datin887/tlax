@@ -161,10 +161,10 @@ require_once __DIR__ . '/includes/header.php';
 
             <div class="pricing-grid">
                 <?php foreach ($tariffs as $i => $tariff): ?>
-                    <div class="pricing-card<?= $tariff['featured'] ? ' pricing-card--featured' : '' ?> reveal reveal--delay-<?= $i + 1 ?>">
+                    <div class="pricing-card<?= $tariff['featured'] ? ' pricing-card--featured' : '' ?> reveal reveal--delay-<?= $i + 1 ?>" data-tariff-id="<?= h($tariff['id']) ?>">
 
                         <?php if ($tariff['featured']): ?>
-                            <div class="pricing-card__badge">
+                            <div class="pricing-card__badge pricing-card__badge--popular">
                                 <span class="badge badge--popular">⭐ Популярный</span>
                             </div>
                         <?php endif; ?>
@@ -367,5 +367,18 @@ require_once __DIR__ . '/includes/header.php';
     </section>
 
 </main>
+
+<script>
+(function() {
+    const cards = document.querySelectorAll('.pricing-card');
+    const badge = document.querySelector('.pricing-card__badge--popular');
+    if (!badge) return;
+
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => badge.style.opacity = '0');
+        card.addEventListener('mouseleave', () => badge.style.opacity = '1');
+    });
+})();
+</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

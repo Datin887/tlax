@@ -667,6 +667,7 @@
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;
+    transition: opacity 0.2s ease;
 }
 
 .pricing-card__name {
