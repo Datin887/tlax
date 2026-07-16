@@ -168,8 +168,7 @@
             <div class="track-card__cover ${hasCover ? '' : coverClass}">
                 ${hasCover
                     ? `<img
-                            data-src="${escHtml(track.cover_url)}"
-                            src="/assets/img/placeholder-cover.svg"
+                            src="${escHtml(track.cover_url)}"
                             alt="Обложка: ${escHtml(track.title)}"
                             loading="lazy"
                             width="400"
