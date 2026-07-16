@@ -70,7 +70,7 @@ $meta_og_image    = $page_meta['og_image']    ?? SITE_URL . '/assets/img/og-defa
 
     <!-- ─── Favicon ─── -->
     <link rel="icon"             type="image/x-icon" href="/favicon.ico">
-    <link rel="icon"             type="image/svg+xml" href="/assets/img/logo.svg">
+    <link rel="icon"             type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" sizes="180x180"      href="/assets/img/icons/apple-touch-icon.png">
     <link rel="manifest"         href="/manifest.json">
     <meta name="theme-color" content="#8B1E3F">
