@@ -368,17 +368,4 @@ require_once __DIR__ . '/includes/header.php';
 
 </main>
 
-<script>
-(function() {
-    const cards = document.querySelectorAll('.pricing-card');
-    const badge = document.querySelector('.pricing-card__badge--popular');
-    if (!badge) return;
-
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', () => badge.style.opacity = '0');
-        card.addEventListener('mouseleave', () => badge.style.opacity = '1');
-    });
-})();
-</script>
-
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

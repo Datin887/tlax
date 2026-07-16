@@ -668,6 +668,11 @@
     transform: translateX(-50%);
     white-space: nowrap;
     transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.pricing-grid:hover .pricing-card__badge--popular {
+    opacity: 0;
 }
 
 .pricing-card__name {
