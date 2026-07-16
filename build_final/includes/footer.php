@@ -144,5 +144,17 @@ $current_year = date('Y');
     <?php endforeach; ?>
 <?php endif; ?>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var cards = document.querySelectorAll('.pricing-card');
+    var badge = document.querySelector('.pricing-card__badge--popular');
+    if (!badge || !cards.length) return;
+    for (var i = 0; i < cards.length; i++) {
+        cards[i].addEventListener('mouseenter', function() { badge.style.opacity = '0'; });
+        cards[i].addEventListener('mouseleave', function() { badge.style.opacity = '1'; });
+    }
+});
+</script>
+
 </body>
 </html>
