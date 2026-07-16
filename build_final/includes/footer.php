@@ -126,7 +126,6 @@ $current_year = date('Y');
             </p>
             <div class="footer__copy-links">
                 <a href="/privacy.php"  class="footer__copy-link">Политика конфиденциальности</a>
-                <a href="/sitemap.xml"  class="footer__copy-link">Карта сайта</a>
             </div>
         </div>
 
