@@ -212,6 +212,6 @@ $js_config = json_encode([
 </script>
 
 <?php
-$extra_js = ['/assets/js/portfolio.js'];
+$extra_js = ['/assets/js/portfolio.js?v=' . time()];
 require_once __DIR__ . '/includes/footer.php';
 ?>

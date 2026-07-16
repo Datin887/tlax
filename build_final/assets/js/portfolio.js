@@ -170,9 +170,6 @@
                     ? `<img
                             src="${escHtml(track.cover_url)}"
                             alt="Обложка: ${escHtml(track.title)}"
-                            loading="lazy"
-                            width="400"
-                            height="225"
                        >`
                     : `<span class="track-card__cover-icon" aria-hidden="true">${coverIcon}</span>`
                 }
