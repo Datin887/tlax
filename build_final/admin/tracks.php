@@ -9,6 +9,7 @@ declare(strict_types=1);
 define('IN_ADMIN', true);
 
 require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/admin-functions.php';
 require_auth();
 
 $page_title = 'Треки портфолио';
