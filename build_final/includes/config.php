@@ -39,6 +39,7 @@ define('TELEGRAM_ENABLED', false);
 define('SESSION_NAME', 'hp_session');
 define('SESSION_LIFETIME', 7200);
 define('PATH_UPLOADS', APP_ROOT . '/assets/uploads');
+define('UPLOAD_PATH', PATH_UPLOADS);
 define('PATH_LOGS', APP_ROOT . '/logs');
 define('RATE_LIMIT_ORDERS', 5);
 define('RATE_LIMIT_PERIOD', 3600);
