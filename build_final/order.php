@@ -571,27 +571,7 @@ require_once __DIR__ . '/includes/header.php';
                                 </div>
                             </fieldset>
 
-                            <!-- Длительность -->
-                            <fieldset class="form-group" style="margin-top: var(--space-md);">
-                                <legend class="form-label">Длительность</legend>
-                                <div class="duration-grid" role="group" aria-label="Длительность">
-                                    <?php foreach ($durations as $dur): ?>
-                                        <label class="duration-card" for="duration-<?= h($dur['value']) ?>">
-                                            <input
-                                                type="radio"
-                                                id="duration-<?= h($dur['value']) ?>"
-                                                name="duration"
-                                                value="<?= h($dur['value']) ?>"
-                                                class="duration-card__input"
-                                                <?= $dur['value'] === 'standard' ? 'checked' : '' ?>
-                                            >
-                                            <span class="duration-card__label"><?= h($dur['label']) ?></span>
-                                            <span class="duration-card__desc"><?= h($dur['desc']) ?></span>
-                                        </label>
-                                    <?php endforeach; ?>
-                                </div>
-                            </fieldset>
-
+                            
                         </div><!-- /.wizard__body -->
 
                         <div class="wizard__footer">
