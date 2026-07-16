@@ -102,7 +102,7 @@ try {
             t.audio_file,
             t.cover_image,
             t.duration,
-            t.style,
+            t.music_style,
             t.mood,
             t.voice_type,
             t.plays_count,
@@ -125,17 +125,17 @@ try {
     $tracks = array_map(function (array $track): array {
         $audio_url = '';
         if (!empty($track['audio_file'])) {
-            $audio_path = __DIR__ . '/../../uploads/tracks/' . $track['audio_file'];
+            $audio_path = __DIR__ . '/../../assets/uploads/tracks/' . $track['audio_file'];
             if (file_exists($audio_path)) {
-                $audio_url = SITE_URL . '/uploads/tracks/' . rawurlencode($track['audio_file']);
+                $audio_url = SITE_URL . '/assets/uploads/tracks/' . rawurlencode($track['audio_file']);
             }
         }
 
         $cover_url = '';
         if (!empty($track['cover_image'])) {
-            $cover_path = __DIR__ . '/../../uploads/covers/' . $track['cover_image'];
+            $cover_path = __DIR__ . '/../../assets/uploads/covers/' . $track['cover_image'];
             if (file_exists($cover_path)) {
-                $cover_url = SITE_URL . '/uploads/covers/' . rawurlencode($track['cover_image']);
+                $cover_url = SITE_URL . '/assets/uploads/covers/' . rawurlencode($track['cover_image']);
             }
         }
 
@@ -147,7 +147,7 @@ try {
             'cover_url'          => $cover_url,
             'duration'           => (int)($track['duration'] ?? 0),
             'duration_formatted' => format_duration((int)($track['duration'] ?? 0)),
-            'style'              => $track['style'] ?? '',
+            'style'              => $track['music_style'] ?? '',
             'mood'               => $track['mood'] ?? '',
             'voice_type'         => $track['voice_type'] ?? '',
             'plays_count'        => (int)($track['plays_count'] ?? 0),
