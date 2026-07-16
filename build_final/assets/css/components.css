@@ -923,3 +923,69 @@
     border-color: var(--color-primary);
     color: #fff;
 }
+
+/* ═══════════════════════════════════════
+   URGENCY CARDS (radio buttons inline)
+═══════════════════════════════════════ */
+
+.urgency-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.urgency-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-white);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.urgency-card:hover {
+    border-color: var(--color-primary);
+    background: var(--color-accent-light);
+}
+
+.urgency-card__input {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+.urgency-card__content {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.urgency-card__label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+}
+
+.urgency-card__sub {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.urgency-card__extra {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-accent);
+    background: var(--color-accent-light);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+}
+
+.urgency-card:has(.urgency-card__input:checked) {
+    border-color: var(--color-primary);
+    background: var(--color-accent-light);
+}
