@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     "UPDATE tracks SET
                         title = :title, description = :desc, category_id = :cat_id,
                         audio_file = :audio, cover_image = :cover, duration = :dur,
-                        style = :style, mood = :mood, voice_type = :voice,
+                        music_style = :style, mood = :mood, voice_type = :voice,
                         is_featured = :featured, is_active = :active,
                         lyrics = :lyrics, sort_order = :sort,
                         updated_at = NOW()

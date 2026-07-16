@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($errors)) {
             try {
                 $db->execute(
-                    "INSERT INTO tracks (title, description, category_id, audio_file, cover_image, duration, style, mood, voice_type, is_featured, is_active, lyrics, sort_order, created_at)
+                    "INSERT INTO tracks (title, description, category_id, audio_file, cover_image, duration, music_style, mood, voice_type, is_featured, is_active, lyrics, sort_order, created_at)
                      VALUES (:title, :desc, :cat_id, :audio, :cover, :dur, :style, :mood, :voice, :featured, :active, :lyrics, :sort, NOW())",
                     [
                         ':title'    => $title,

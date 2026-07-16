@@ -146,7 +146,7 @@ require_once __DIR__ . '/includes/admin-header.php';
                                     <?php endif; ?>
                                 </td>
                                 <td><?= h($track['category_name'] ?? '—') ?></td>
-                                <td><?= h($track['style'] ?? '—') ?></td>
+                                <td><?= h($track['music_style'] ?? '—') ?></td>
                                 <td style="text-align:center;"><?= number_format((int)$track['plays_count']) ?></td>
                                 <td style="text-align:center;">
                                     <form method="POST" style="display:inline;">
