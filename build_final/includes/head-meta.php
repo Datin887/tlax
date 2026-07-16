@@ -80,11 +80,11 @@ $meta_og_image    = $page_meta['og_image']    ?? SITE_URL . '/assets/img/og-defa
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- ─── CSS ─── -->
-    <link rel="stylesheet" href="/assets/css/variables.css">
-    <link rel="stylesheet" href="/assets/css/reset.css">
-    <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="stylesheet" href="/assets/css/components.css">
-    <link rel="stylesheet" href="/assets/css/responsive.css">
+    <link rel="stylesheet" href="/assets/css/variables.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="/assets/css/reset.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="/assets/css/main.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="/assets/css/components.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="/assets/css/responsive.css?v=<?= time() ?>">
 
     <?php if (isset($extra_css)): ?>
         <?php foreach ($extra_css as $css): ?>

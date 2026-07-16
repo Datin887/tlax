@@ -935,8 +935,8 @@
 }
 
 .urgency-card {
-    display: flex;
-    align-items: center;
+    display: flex !important;
+    align-items: center !important;
     gap: 10px;
     padding: 10px 14px;
     border: 1.5px solid var(--color-border);
