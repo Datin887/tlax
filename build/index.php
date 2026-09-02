@@ -8,10 +8,10 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../includes/functions.php';
-require_once __DIR__ . '/../includes/security.php';
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/db.php';
+require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/security.php';
 
 // ─── Получение треков для главной страницы ───
 $featured_tracks = [];
@@ -59,7 +59,7 @@ $faq_items = [
     ],
     [
         'q' => 'Когда нужно платить?',
-        'a' => 'Только после того, как вы услышите готовую песню и она вам понравится. Мы работаем по принципу "слушаете — потом решаете". Никаких предоплат.',
+        'a' => 'Отправляем первые 60 секунд песни на согласование. Если нравится — оплачиваете и получаете полную версию. Никаких предоплат.',
     ],
     [
         'q' => 'Что если результат не понравится?',
@@ -126,8 +126,8 @@ $stats = [
     ['value' => 1,   'suffix' => '',  'label' => 'день — минимальный срок'],
 ];
 
-require_once __DIR__ . '/../includes/head-meta.php';
-require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/includes/head-meta.php';
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <main>
@@ -342,11 +342,6 @@ require_once __DIR__ . '/../includes/header.php';
                                     <?php if (!empty($track['mood'])): ?>
                                         <span class="track-card__meta-item">
                                             🎭 <?= h($track['mood']) ?>
-                                        </span>
-                                    <?php endif; ?>
-                                    <?php if (!empty($track['voice_type'])): ?>
-                                        <span class="track-card__meta-item">
-                                            🎤 <?= h($track['voice_type']) ?>
                                         </span>
                                     <?php endif; ?>
                                 </div>
@@ -632,4 +627,4 @@ require_once __DIR__ . '/../includes/header.php';
 
 </main>
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>

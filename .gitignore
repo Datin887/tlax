@@ -1,0 +1,7 @@
+env.config.php
+.env
+*.env
+includes/logs/
+assets/uploads/
+backups_*/
+*.sql

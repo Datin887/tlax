@@ -549,3 +549,21 @@ function set_security_headers(): void
 
 // Автоматически устанавливаем заголовки при подключении файла
 set_security_headers();
+/**
+ * Генерация CSRF токена
+ */
+function generate_csrf_token(): string
+{
+    if (!isset($_SESSION['_csrf_token'])) {
+        $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['_csrf_token'];
+}
+
+/**
+ * Проверка CSRF токена
+ */
+function validate_csrf_token(string $token): bool
+{
+    return isset($_SESSION['_csrf_token']) && hash_equals($_SESSION['_csrf_token'], $token);
+}

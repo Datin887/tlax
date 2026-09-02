@@ -72,9 +72,9 @@ try {
 
     // ─── Посещаемость по дням ───
     $views_by_day = $db->fetchAll(
-        "SELECT DATE(created_at) AS date, COUNT(*) AS count
+        "SELECT DATE(viewed_at) AS date, COUNT(*) AS count
          FROM page_views
-         WHERE created_at >= DATE_SUB(NOW(), INTERVAL :days DAY)
+         WHERE viewed_at >= DATE_SUB(NOW(), INTERVAL :days DAY)
          GROUP BY DATE(created_at)
          ORDER BY date ASC",
         [':days' => $period]
@@ -82,7 +82,7 @@ try {
 
     // ─── Конверсия ───
     $total_views  = $db->fetchOne(
-        "SELECT COUNT(*) AS cnt FROM page_views WHERE created_at >= DATE_SUB(NOW(), INTERVAL :days DAY)",
+        "SELECT COUNT(*) AS cnt FROM page_views WHERE viewed_at >= DATE_SUB(NOW(), INTERVAL :days DAY)",
         [':days' => $period]
     );
     $total_orders_period = $db->fetchOne(

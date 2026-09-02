@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/functions.php';
-require_once __DIR__ . '/../includes/security.php';
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/security.php';
 
 // ─── Номер заказа из URL ───
 $order_number = preg_replace('/[^A-Z0-9-]/', '', strtoupper($_GET['order'] ?? ''));
@@ -24,8 +24,8 @@ $page_meta = [
     'canonical'   => SITE_URL . '/thank-you.php',
 ];
 
-require_once __DIR__ . '/../includes/head-meta.php';
-require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/includes/head-meta.php';
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <main>
@@ -134,4 +134,4 @@ require_once __DIR__ . '/../includes/header.php';
 
 </main>
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>

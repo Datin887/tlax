@@ -8,10 +8,10 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../includes/functions.php';
-require_once __DIR__ . '/../includes/security.php';
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/db.php';
+require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/security.php';
 
 $page_meta = [
     'title'       => 'Тарифы и цены на песни — от 2 500 ₽ | Хитовая Песня',
@@ -67,10 +67,10 @@ $tariffs = [
         'timing'   => '1–3 дня',
         'features' => [
             'Всё из тарифа «Стандарт»',
-            '5+ вариантов трека на выбор',
+            '5 вариантов треков',
             'Максимальное качество звука',
             'Видео с текстом (lyric video)',
-            'Неограниченные правки',
+            '5 правок',
             'Приоритетное обслуживание',
             'Исходники проекта',
         ],
@@ -114,8 +114,8 @@ $payment_faq = [
     ],
 ];
 
-require_once __DIR__ . '/../includes/head-meta.php';
-require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/includes/head-meta.php';
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <main>
@@ -161,10 +161,10 @@ require_once __DIR__ . '/../includes/header.php';
 
             <div class="pricing-grid">
                 <?php foreach ($tariffs as $i => $tariff): ?>
-                    <div class="pricing-card<?= $tariff['featured'] ? ' pricing-card--featured' : '' ?> reveal reveal--delay-<?= $i + 1 ?>">
+                    <div class="pricing-card<?= $tariff['featured'] ? ' pricing-card--featured' : '' ?> reveal reveal--delay-<?= $i + 1 ?>" data-tariff-id="<?= h($tariff['id']) ?>">
 
                         <?php if ($tariff['featured']): ?>
-                            <div class="pricing-card__badge">
+                            <div class="pricing-card__badge pricing-card__badge--popular">
                                 <span class="badge badge--popular">⭐ Популярный</span>
                             </div>
                         <?php endif; ?>
@@ -368,4 +368,4 @@ require_once __DIR__ . '/../includes/header.php';
 
 </main>
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>

@@ -45,11 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $db = Database::getInstance();
 
                 $admin = $db->fetchOne(
-                    "SELECT id, username, password_hash, is_active, name
+                    "SELECT id, username, password_hash, is_active, display_name
                      FROM admins
-                     WHERE username = :username OR email = :username
+                     WHERE username = :u1 OR email = :u2
                      LIMIT 1",
-                    [':username' => $username]
+                    [':u1' => $username, ':u2' => $username]
                 );
 
                 if ($admin && $admin['is_active'] && password_verify($password, $admin['password_hash'])) {
@@ -60,19 +60,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     // Логируем успешный вход
                     $db->execute(
-                        "INSERT INTO admin_sessions (admin_id, token, ip_address, user_agent, created_at, last_activity)
-                         VALUES (:admin_id, :token, :ip, :ua, NOW(), NOW())",
+                        "INSERT INTO admin_sessions (admin_id, session_id, ip_address, user_agent, created_at, expires_at, is_active)
+                         VALUES (:admin_id, :session_id, :ip, :ua, NOW(), DATE_ADD(NOW(), INTERVAL 2 HOUR), 1)",
                         [
                             ':admin_id' => $admin['id'],
-                            ':token'    => hash('sha256', $token),
+                            ':session_id' => hash('sha256', $token),
                             ':ip'       => $ip,
                             ':ua'       => mb_substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 500),
                         ]
                     );
 
                     // Нужна смена пароля (если пароль слабый)?
-                    if (password_needs_rehash($admin['password_hash'], PASSWORD_ARGON2ID)) {
-                        $new_hash = password_hash($password, PASSWORD_ARGON2ID);
+                    if (password_needs_rehash($admin['password_hash'], PASSWORD_DEFAULT)) {
+                        $new_hash = password_hash($password, PASSWORD_DEFAULT);
                         $db->execute(
                             "UPDATE admins SET password_hash = :hash WHERE id = :id",
                             [':hash' => $new_hash, ':id' => $admin['id']]

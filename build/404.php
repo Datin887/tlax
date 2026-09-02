@@ -6,8 +6,8 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/functions.php';
 
 http_response_code(404);
 
@@ -17,8 +17,8 @@ $page_meta = [
     'canonical'   => SITE_URL . '/404',
 ];
 
-require_once __DIR__ . '/../includes/head-meta.php';
-require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/includes/head-meta.php';
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <main>
@@ -42,4 +42,4 @@ require_once __DIR__ . '/../includes/header.php';
     </section>
 </main>
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>

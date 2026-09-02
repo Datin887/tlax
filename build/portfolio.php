@@ -8,10 +8,10 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../includes/functions.php';
-require_once __DIR__ . '/../includes/security.php';
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/db.php';
+require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/security.php';
 
 // ─── Получаем список категорий из БД ───
 $categories = [];
@@ -49,8 +49,8 @@ $page_meta = [
     'canonical'   => SITE_URL . '/portfolio.php' . ($active_category ? '?category=' . $active_category : ''),
 ];
 
-require_once __DIR__ . '/../includes/head-meta.php';
-require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/includes/head-meta.php';
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <main>
@@ -212,6 +212,6 @@ $js_config = json_encode([
 </script>
 
 <?php
-$extra_js = ['/assets/js/portfolio.js'];
-require_once __DIR__ . '/../includes/footer.php';
+$extra_js = ['/assets/js/portfolio.js?v=' . time()];
+require_once __DIR__ . '/includes/footer.php';
 ?>

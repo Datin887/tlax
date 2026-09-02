@@ -38,7 +38,7 @@ try {
 
     // ─── Посетители сегодня (из page_views) ───
     $stats_views = $db->fetchOne(
-        "SELECT COUNT(*) AS today FROM page_views WHERE DATE(created_at) = CURDATE()"
+        "SELECT COUNT(*) AS today FROM page_views WHERE DATE(viewed_at) = CURDATE()"
     );
 
     // ─── Последние 5 заявок ───

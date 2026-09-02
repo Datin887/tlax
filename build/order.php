@@ -8,10 +8,11 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../includes/functions.php';
-require_once __DIR__ . '/../includes/security.php';
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/db.php';
+require_once __DIR__ . '/includes/security.php';
+require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/security.php';
 
 // ─── Предзаполнение из URL-параметров ───
 $preset_tariff   = preg_replace('/[^a-z_]/', '', $_GET['tariff']   ?? '');
@@ -115,8 +116,8 @@ $js_presets = json_encode([
     'style'    => $preset_style,
 ]);
 
-require_once __DIR__ . '/../includes/head-meta.php';
-require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/includes/head-meta.php';
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <main class="order-page">
@@ -570,27 +571,7 @@ require_once __DIR__ . '/../includes/header.php';
                                 </div>
                             </fieldset>
 
-                            <!-- Длительность -->
-                            <fieldset class="form-group" style="margin-top: var(--space-md);">
-                                <legend class="form-label">Длительность</legend>
-                                <div class="duration-grid" role="group" aria-label="Длительность">
-                                    <?php foreach ($durations as $dur): ?>
-                                        <label class="duration-card" for="duration-<?= h($dur['value']) ?>">
-                                            <input
-                                                type="radio"
-                                                id="duration-<?= h($dur['value']) ?>"
-                                                name="duration"
-                                                value="<?= h($dur['value']) ?>"
-                                                class="duration-card__input"
-                                                <?= $dur['value'] === 'standard' ? 'checked' : '' ?>
-                                            >
-                                            <span class="duration-card__label"><?= h($dur['label']) ?></span>
-                                            <span class="duration-card__desc"><?= h($dur['desc']) ?></span>
-                                        </label>
-                                    <?php endforeach; ?>
-                                </div>
-                            </fieldset>
-
+                            
                         </div><!-- /.wizard__body -->
 
                         <div class="wizard__footer">
@@ -745,7 +726,7 @@ require_once __DIR__ . '/../includes/header.php';
                                         id="client_phone"
                                         name="client_phone"
                                         class="form-input form-input--phone"
-                                        placeholder="(999) 999-99-99"
+                                        placeholder="(999) 996-16-48"
                                         required
                                         autocomplete="tel"
                                         inputmode="numeric"
@@ -781,7 +762,7 @@ require_once __DIR__ . '/../includes/header.php';
                                         id="client_whatsapp"
                                         name="client_whatsapp"
                                         class="form-input"
-                                        placeholder="+7 (999) 999-99-99"
+                                        placeholder="+7 (999) 996-16-48"
                                         maxlength="20"
                                         autocomplete="off"
                                     >
@@ -947,5 +928,5 @@ require_once __DIR__ . '/../includes/header.php';
 
 <?php
 $extra_js = ['/assets/js/form-wizard.js'];
-require_once __DIR__ . '/../includes/footer.php';
+require_once __DIR__ . '/includes/footer.php';
 ?>

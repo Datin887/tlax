@@ -125,7 +125,7 @@ function get_current_admin(): ?array
     try {
         $db    = Database::getInstance();
         $admin = $db->fetchOne(
-            "SELECT id, username, email, name FROM admins WHERE id = :id AND is_active = 1",
+            "SELECT id, username, email, display_name FROM admins WHERE id = :id AND is_active = 1",
             [':id' => (int)$_SESSION['admin_id']]
         );
     } catch (Exception $e) {

@@ -8,12 +8,13 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../includes/config.php';
-require_once __DIR__ . '/../../includes/db.php';
-require_once __DIR__ . '/../../includes/functions.php';
-require_once __DIR__ . '/../../includes/security.php';
-require_once __DIR__ . '/../../includes/mail.php';
-require_once __DIR__ . '/../../includes/telegram.php';
+require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/security.php';
+require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../includes/security.php';
+require_once __DIR__ . '/../includes/mail.php';
+require_once __DIR__ . '/../includes/telegram.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     send_json(['success' => false, 'message' => 'Method not allowed'], 405);
