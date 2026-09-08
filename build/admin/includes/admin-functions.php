@@ -197,13 +197,17 @@ function tag_uploaded_track(string $audio_filename, string $title, string $descr
         }
     }
 
+    // COMM (описание в плеере): всегда рекламный блок — видно при шеринге.
+    // Название трека (TIT2) — берётся из $title, оно сохраняется всегда.
+    $comment = defined('ID3_COMMENT') ? ID3_COMMENT : '';
+
     $tags = [
         'title'      => $title,
         'artist'     => defined('ID3_ARTIST') ? ID3_ARTIST : 'Хитовая Песня',
         'album'      => defined('ID3_ALBUM')  ? ID3_ALBUM  : '',
         'genre'      => !empty($genre) ? $genre : (defined('ID3_GENRE') ? ID3_GENRE : ''),
         'year'       => defined('ID3_YEAR')   ? ID3_YEAR   : '',
-        'comment'    => $description,
+        'comment'    => $comment,
         'cover_path' => $apic_path,
     ];
 
