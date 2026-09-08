@@ -130,7 +130,7 @@ require_once __DIR__ . '/includes/admin-header.php';
                                 <td>
                                     <?php if ($track['cover_image']): ?>
                                         <img
-                                            src="/uploads/covers/<?= h($track['cover_image']) ?>"
+                                            src="/assets/uploads/covers/<?= h($track['cover_image']) ?>"
                                             alt="<?= h($track['title']) ?>"
                                             style="width:48px;height:48px;object-fit:cover;border-radius:8px;"
                                             loading="lazy"

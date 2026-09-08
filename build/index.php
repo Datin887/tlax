@@ -284,10 +284,10 @@ require_once __DIR__ . '/includes/header.php';
                             $delay_class = $i < 3 ? ' reveal--delay-' . ($i + 1) : '';
                             $cover_class = 'track-card__cover--' . ($track['category_slug'] ?? 'wedding');
                             $audio_url   = !empty($track['audio_file'])
-                                ? '/uploads/tracks/' . h($track['audio_file'])
+                                ? '/assets/uploads/tracks/' . h($track['audio_file'])
                                 : '';
                             $cover_url   = !empty($track['cover_image'])
-                                ? '/uploads/covers/' . h($track['cover_image'])
+                                ? '/assets/uploads/covers/' . h($track['cover_image'])
                                 : '';
                         ?>
                         <article

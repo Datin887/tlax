@@ -224,7 +224,7 @@ require_once __DIR__ . '/includes/admin-header.php';
                     <div class="current-file">
                         <span class="current-file__label">🎵 Текущий файл:</span>
                         <audio controls style="width:100%;margin:8px 0;">
-                            <source src="/uploads/tracks/<?= h($track['audio_file']) ?>" type="audio/mpeg">
+                            <source src="/assets/uploads/tracks/<?= h($track['audio_file']) ?>" type="audio/mpeg">
                         </audio>
                         <span class="form-hint"><?= h($track['audio_file']) ?></span>
                     </div>
@@ -243,7 +243,7 @@ require_once __DIR__ . '/includes/admin-header.php';
                 <?php if ($track['cover_image']): ?>
                     <div class="current-file">
                         <span class="current-file__label">🖼 Текущая обложка:</span>
-                        <img src="/uploads/covers/<?= h($track['cover_image']) ?>"
+                        <img src="/assets/uploads/covers/<?= h($track['cover_image']) ?>"
                              alt="Обложка" style="width:100%;max-height:150px;object-fit:cover;border-radius:8px;margin:8px 0;">
                     </div>
                 <?php endif; ?>
