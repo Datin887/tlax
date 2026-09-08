@@ -127,7 +127,11 @@ function get_audio_duration(string $filepath): int
 {
     if (!file_exists($filepath)) return 0;
 
-    // Пробуем через getID3 если есть
+    // Точный парсер MP3 (MPEG-фреймы + Xing для VBR) — работает без внешних библиотек
+    $dur = id3_mp3_duration($filepath);
+    if ($dur > 0) return $dur;
+
+    // Пробуем через getID3 если есть (резервный вариант)
     if (class_exists('getID3')) {
         $id3      = new getID3();
         $info     = $id3->analyze($filepath);
