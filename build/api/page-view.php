@@ -6,9 +6,10 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../includes/config.php';
-require_once __DIR__ . '/../../includes/db.php';
-require_once __DIR__ . '/../../includes/functions.php';
+require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../includes/security.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -39,7 +40,7 @@ foreach ($bot_patterns as $pattern) {
 try {
     $db = Database::getInstance();
     $db->execute(
-        "INSERT INTO page_views (page, ip_address, referer, user_agent, created_at)
+        "INSERT INTO page_views (page, ip_address, referer, user_agent, viewed_at)
          VALUES (:page, :ip, :ref, :ua, NOW())",
         [':page' => $page, ':ip' => $ip, ':ref' => $referer, ':ua' => $ua]
     );

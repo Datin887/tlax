@@ -75,7 +75,7 @@ try {
         "SELECT DATE(viewed_at) AS date, COUNT(*) AS count
          FROM page_views
          WHERE viewed_at >= DATE_SUB(NOW(), INTERVAL :days DAY)
-         GROUP BY DATE(created_at)
+         GROUP BY DATE(viewed_at)
          ORDER BY date ASC",
         [':days' => $period]
     );
