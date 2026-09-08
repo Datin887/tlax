@@ -95,6 +95,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':sort'     => $sort_order,
                     ]
                 );
+
+                // ID3-теги: название, описание, обложка 300x300 — внутрь MP3
+                if ($audio_filename) {
+                    @tag_uploaded_track($audio_filename, $title, $description, $cover_filename, $style);
+                }
+
                 header('Location: /admin/tracks.php?added=1');
                 exit;
             } catch (Exception $e) {

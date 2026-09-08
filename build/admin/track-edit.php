@@ -116,6 +116,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':id'       => $track_id,
                     ]
                 );
+
+                // ID3-теги: название, описание, обложка — внутрь MP3 (и при смене данных тоже перезаписываем)
+                if ($audio_filename) {
+                    @tag_uploaded_track($audio_filename, $title, $description, $cover_filename, $style);
+                }
+
                 header('Location: /admin/tracks.php?saved=1');
                 exit;
             } catch (Exception $e) {

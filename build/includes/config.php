@@ -119,3 +119,12 @@ define('CONTACT_EMAIL', 'datinvasy@gmail.com');
 define('CONTACT_TELEGRAM', '@tlax');
 define('WORK_HOURS', 'Пн-Вс 09:00-22:00');
 define('CONTACT_PHONE_RAW', '79999961648');
+
+// ─── ID3-теги для MP3 (одинаковые для всех треков) ───
+// Название трека (TIT2) и описание (COMM) подставляются из формы админки автоматически.
+// Остальные теги — общие для всех файлов, меняй здесь.
+define('ID3_ARTIST', 'Хитовая Песня');            // Исполнитель (TPE1)
+define('ID3_ALBUM', 'Хитовая Песня — песни на заказ'); // Альбом (TALB)
+define('ID3_GENRE', 'Песня на заказ');            // Жанр (TCON)
+define('ID3_YEAR', '2026');                       // Год (TYER)
+define('ID3_DEFAULT_COVER', APP_ROOT . '/assets/uploads/covers/default_cover_300.jpg'); // Одна обложка для всех файлов (JPEG 300x300)

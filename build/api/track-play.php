@@ -64,7 +64,7 @@ try {
         "SELECT id FROM track_plays
          WHERE track_id = :track_id
            AND ip_address = :ip
-           AND created_at > DATE_SUB(NOW(), INTERVAL 5 MINUTE)",
+           AND played_at > DATE_SUB(NOW(), INTERVAL 5 MINUTE)",
         [
             ':track_id' => $track_id,
             ':ip'       => $client_ip,
@@ -80,7 +80,7 @@ try {
     $user_agent = mb_substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 500, 'UTF-8');
 
     $db->execute(
-        "INSERT INTO track_plays (track_id, ip_address, user_agent, created_at)
+        "INSERT INTO track_plays (track_id, ip_address, user_agent, played_at)
          VALUES (:track_id, :ip, :ua, NOW())",
         [
             ':track_id' => $track_id,
