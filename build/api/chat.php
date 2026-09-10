@@ -189,15 +189,18 @@ function ai_call(string $url, string $api_key, array $history, string $model, st
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+    // Cloudflare (перед OpenRouter) блокирует запросы без браузерного User-Agent
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
         'Authorization: Bearer ' . $api_key,
         'HTTP-Referer: https://tlax.ru',
         'X-Title: Hitovaya Pesnya',
     ]);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'tlax.ru-chat-bot');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_ENCODING, '');
 
     $resp = curl_exec($ch);
     $code = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
@@ -233,18 +236,88 @@ function ai_call(string $url, string $api_key, array $history, string $model, st
 /**
  * Запрос к OpenRouter AI.
  *
+ * ⚠ Cloudflare блокирует прямой доступ к openrouter.ai с IP tlax.ru (5.35.100.174).
+ * Запрос идёт через релей на owlex.top (из каталога /tlax-relay/relay.php):
+ *   POST { model, messages, temperature, max_tokens } → { success, reply }
+ * Релей добавляет ключ API сам (хранит его в relay_env.php на owlex.top).
+ *
+ * Адрес релея и токен — из .env:
+ *   RELAY_URL   (по умолчанию https://owlex.top/tlax-relay/relay.php)
+ *   RELAY_TOKEN (токен доступа к релею)
+ *
+ * Если релей недоступен — фолбэк на ai_call (прямой OpenRouter) и далее DeepSeek.
+ *
  * @param array $history История диалога
  * @return ?string
  */
 function ai_chat_openrouter(array $history): ?string
 {
-    return ai_call(
-        'https://openrouter.ai/api/v1/chat/completions',
-        (string)env('OPENROUTER_API_KEY', ''),
-        $history,
-        (string)env('OPENROUTER_MODEL', 'google/gemini-2.5-flash'),
-        'OpenRouter'
-    );
+    $relay_url = (string)env('RELAY_URL', 'https://owlex.top/tlax-relay/relay.php');
+    $relay_token = (string)env('RELAY_TOKEN', '');
+
+    if ($relay_token === '') {
+        log_error('ai_chat_openrouter: RELAY_TOKEN не задан в env');
+        return ai_call(
+            'https://openrouter.ai/api/v1/chat/completions',
+            (string)env('OPENROUTER_API_KEY', ''),
+            $history,
+            (string)env('OPENROUTER_MODEL', 'google/gemini-2.5-flash'),
+            'OpenRouter'
+        );
+    }
+
+    // Собираем историю (system + диалог) — relay проксирует в OpenRouter as-is
+    $messages = [['role' => 'system', 'content' => ai_system_prompt()]];
+    foreach ($history as $m) {
+        $messages[] = $m;
+    }
+
+    $body = json_encode([
+        'model'       => (string)env('OPENROUTER_MODEL', 'google/gemini-2.5-flash'),
+        'messages'    => $messages,
+        'temperature' => 0.7,
+        'max_tokens'  => 500,
+    ], JSON_UNESCAPED_UNICODE);
+
+    $ch = curl_init($relay_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'X-Relay-Token: ' . $relay_token,
+        'HTTP-Referer: https://tlax.ru',
+        'X-Title: Hitovaya Pesnya',
+    ]);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 45);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_ENCODING, '');
+
+    $resp = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+    $curl_err = curl_errno($ch);
+    curl_close($ch);
+
+    if ($resp === false || $code < 200 || $code >= 300) {
+        log_error(sprintf(
+            'ai_chat_openrouter: relay HTTP %d, curl_errno=%d, body=%s',
+            $code,
+            $curl_err,
+            is_string($resp) ? mb_substr((string)$resp, 0, 200) : 'no response'
+        ));
+        return null;
+    }
+
+    $data = json_decode((string)$resp, true);
+    $reply = $data['reply'] ?? null;
+    if (!is_string($reply) || trim($reply) === '') {
+        log_error('ai_chat_openrouter: relay вернул пустой/некорректный ответ');
+        return null;
+    }
+
+    return trim($reply);
 }
 
 /**
