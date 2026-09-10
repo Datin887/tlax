@@ -102,8 +102,10 @@
         }
         if (isRecording) {
             if (recognizer) { recognizer.stop(); }
+            buzz(60); /* отклик: стоп */
             return;
         }
+        buzz([25, 40, 25]); /* отклик: старт записи */
         startListening();
     }
 
@@ -269,6 +271,23 @@
         }
     }
 
+    /* ─── Мобильная клавиатура: инпут не должен уезжать за экран ─── */
+    function keepInputVisible() {
+        if (!inputEl) return;
+        var vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        var rect = inputEl.getBoundingClientRect();
+        if (rect.bottom > vh - 4 || rect.top < 0) {
+            inputEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+    }
+
+    /* ─── Индикация: вибрация (где поддерживается) при записи ─── */
+    function buzz(pattern) {
+        if (navigator.vibrate) {
+            try { navigator.vibrate(pattern || 40); } catch (err) { /* нет поддержки */ }
+        }
+    }
+
     /* ─── Инициализация ─── */
     function init() {
         messagesEl = document.getElementById('chat-messages');
@@ -280,6 +299,15 @@
 
         if (!messagesEl || !inputEl || !sendBtn || !micBtn) {
             return;
+        }
+
+        /* Фокус на поле — поднимаем его над экранной клавиатурой */
+        inputEl.addEventListener('focus', function () {
+            setTimeout(keepInputVisible, 60);
+        });
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', keepInputVisible);
+            window.visualViewport.addEventListener('scroll', keepInputVisible);
         }
 
         /* Отправка по кнопке */

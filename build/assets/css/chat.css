@@ -336,9 +336,23 @@
 }
 
 @media (max-width: 767px) {
+    /* Компактный hero на мобиле — чат поднимается, поле ввода видно сразу */
+    .page-hero__content .breadcrumb,
+    .page-hero__content .section-subtitle {
+        display: none;
+    }
+    .page-hero__content .section-title {
+        margin-bottom: 8px;
+    }
+    .page-hero {
+        padding-top: 18px;
+        padding-bottom: 18px;
+    }
+
     .chat {
-        height: calc(100vh - 300px);
-        min-height: 420px;
+        /* Как в мессенджере: почти на весь экран (минус шапка/hero/футер) */
+        height: calc(100dvh - 250px);
+        min-height: 380px;
         border-radius: var(--radius-lg);
     }
 
@@ -353,11 +367,41 @@
 
     .chat__avatar { width: 44px; height: 44px; font-size: 22px; }
 
+    /* Крупные тач-кнопки (≥48px, комфортно — 58px) */
     .chat__mic,
-    .chat__send { width: 48px; height: 48px; }
+    .chat__send {
+        width: 58px;
+        height: 58px;
+        touch-action: manipulation;
+    }
+    .chat__mic { font-size: 26px; }
+    .chat__send svg { width: 26px; height: 26px; }
+
+    /* Инпут ≥16px — запрет авто-зума iOS при фокусе */
+    .chat__input { font-size: 16px; }
 
     .chat__input-area {
         gap: 8px;
         padding: 10px 12px;
+        /* Прилипает к низу чата; при фокусе браузер сам поднимает его над клавиатурой */
+        position: sticky;
+        bottom: 0;
+        z-index: 2;
+    }
+
+    /* Быстрые кнопки — сетка 2×2 (4 кнопки), удобно пальцем */
+    .chat__quick-replies {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+    .chat__quick {
+        min-height: 46px;
+        padding: 12px 10px;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        touch-action: manipulation;
     }
 }
