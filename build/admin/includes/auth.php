@@ -16,6 +16,11 @@ require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/security.php';
+// Хелперы лейблов (get_occasion_label, get_tariff_label, get_urgency_label и др.)
+// живут в includes/mail.php — без них падают admin/orders.php и admin/stats.php.
+require_once __DIR__ . '/../../includes/mail.php';
+// Функции админки (render_status_badge, upload_audio_file, tag_uploaded_track…)
+require_once __DIR__ . '/admin-functions.php';
 
 // ─── Настройки сессии ───
 if (session_status() === PHP_SESSION_NONE) {
