@@ -13,6 +13,7 @@
     var FALLBACK_REPLY = cfg.fallbackReply || 'Отлично! Расскажите подробнее о главном герое праздника.';
     var MIN_TYPING_MS = 700;   /* минимум «печатания» для натуральности */
     var FALLBACK_DELAY_MS = 1000;
+    var LEAD_REDIRECT_MS = 2600; /* пауза на прочтение финального ответа → страница «Спасибо» */
 
     /* ─── DOM ─── */
     var messagesEl, inputEl, sendBtn, micBtn, micHint, typingEl, quickWrap;
@@ -218,7 +219,15 @@
                 if (!data || data.success !== true || !data.reply) {
                     throw new Error('bad payload');
                 }
-                replyAfter(Math.max(0, MIN_TYPING_MS - (Date.now() - started)), data.reply);
+                var delay = Math.max(0, MIN_TYPING_MS - (Date.now() - started));
+                replyAfter(delay, data.reply);
+
+                /* Лид принят — показываем финальный ответ и уводим на «Спасибо» */
+                if (data.redirect) {
+                    setTimeout(function () {
+                        window.location.href = data.redirect;
+                    }, delay + LEAD_REDIRECT_MS);
+                }
             })
             .catch(function () {
                 /* Бэкенд пока недоступен — JS-заглушка через 1 секунду */

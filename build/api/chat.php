@@ -100,6 +100,7 @@ $_SESSION['chat_history'] = $history;
 
 // ─── Обработка [LEAD_CAPTURED] ───
 $is_lead = false;
+$lead_redirect = null;
 $reply = $ai_reply;
 
 if (str_contains($reply, '[LEAD_CAPTURED]')) {
@@ -117,12 +118,18 @@ if (str_contains($reply, '[LEAD_CAPTURED]')) {
     } else {
         log_error('save_ai_lead: повторный LEAD_CAPTURED в той же сессии — пропуск (уже сохранено)');
     }
+
+    // Если заявка сохранена — ведём клиента на страницу «Спасибо» с номером заказа
+    if (($_SESSION['lead_saved'] ?? false) && ($_SESSION['last_order_number'] ?? '') !== '') {
+        $lead_redirect = '/thank-you.php?order=' . urlencode((string)$_SESSION['last_order_number']);
+    }
 }
 
 send_json([
-    'success' => true,
-    'reply'   => $reply,
-    'is_lead' => $is_lead,
+    'success'  => true,
+    'reply'    => $reply,
+    'is_lead'  => $is_lead,
+    'redirect' => $lead_redirect,
 ]);
 
 
@@ -554,6 +561,9 @@ function save_ai_lead(string $ip, array $history): int
             "UPDATE orders SET order_number = :num WHERE id = :id",
             [':num' => 'HP-' . str_pad((string)$order_id, 5, '0', STR_PAD_LEFT), ':id' => $order_id]
         );
+
+        // Номер заказа для страницы «Спасибо» (thank-you.php?order=HP-XXXXX)
+        $_SESSION['last_order_number'] = 'HP-' . str_pad((string)$order_id, 5, '0', STR_PAD_LEFT);
 
         log_error(sprintf('save_ai_lead: OK id=%s phone=%s occasion=%s tariff=%s', $order_id, $phone, $occasion, $tariff));
         return (int)$order_id;
