@@ -1,0 +1,363 @@
+/**
+ * Чат «Музыкальный продюсер» — стили (order.php)
+ * Палитра: бордовый + бежевый крем + золото
+ */
+
+/* ─── Локальные токены чата (в духе фирменной палитры) ─── */
+.chat-root {
+    --chat-wine:       #7A1C3E;   /* основной бордовый */
+    --chat-wine-dark:  #5C122D;   /* тёмный бордовый */
+    --chat-cream:      #FDF8F2;   /* бежевый крем */
+    --chat-cream-soft: #F5ECE3;   /* мягкий бежевый */
+    --chat-gold:       #D4A574;   /* золотистый акцент */
+    --chat-gold-dark:  #B8864E;
+    --chat-online:     #4A7C59;   /* зелёный «онлайн» */
+}
+
+/* ═══════════════════════════════════════════
+   КАРТОЧКА ЧАТА
+═══════════════════════════════════════════ */
+.chat {
+    display: flex;
+    flex-direction: column;
+    height: min(640px, calc(100vh - 300px));
+    min-height: 460px;
+    border: 1px solid var(--chat-gold);
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    background: var(--chat-cream);
+    box-shadow: var(--shadow-md), 0 0 0 1px rgba(212, 165, 116, 0.35);
+}
+
+/* ═══════════════════════════════════════════
+   ШАПКА ЧАТА
+═══════════════════════════════════════════ */
+.chat__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: linear-gradient(135deg, var(--chat-wine) 0%, var(--chat-wine-dark) 100%);
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.chat__avatar {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    font-size: 26px;
+    line-height: 1;
+    background: var(--chat-cream);
+    border: 2px solid var(--chat-gold);
+    border-radius: var(--radius-full);
+    box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.25);
+}
+
+.chat__info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+    min-width: 0;
+}
+
+.chat__name {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat__status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.chat__status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: var(--radius-full);
+    background: var(--chat-online);
+    box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.35);
+    animation: chat-online-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes chat-online-pulse {
+    0%, 100% { opacity: 1; }
+    50%     { opacity: 0.45; }
+}
+
+/* ═══════════════════════════════════════════
+   ОБЛАСТЬ СООБЩЕНИЙ
+═══════════════════════════════════════════ */
+.chat__messages {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    scroll-behavior: smooth;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(212, 165, 116, 0.06), transparent 55%),
+        var(--chat-cream);
+}
+
+/* ─── Баббл бота (слева, бежевый) ─── */
+.chat__msg-bot {
+    align-self: flex-start;
+    max-width: 78%;
+    padding: 12px 16px;
+    background: var(--chat-cream-soft);
+    color: var(--color-text);
+    border: 1px solid rgba(212, 165, 116, 0.45);
+    border-radius: 18px 18px 18px 4px;
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    animation: chat-msg-in 0.25s ease-out;
+}
+
+/* ─── Баббл пользователя (справа, бордовый) ─── */
+.chat__msg-user {
+    align-self: flex-end;
+    max-width: 78%;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, var(--chat-wine), var(--chat-wine-dark));
+    color: #fff;
+    border-radius: 18px 18px 4px 18px;
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    animation: chat-msg-in 0.25s ease-out;
+    box-shadow: var(--shadow-xs);
+}
+
+@keyframes chat-msg-in {
+    from { opacity: 0; transform: translateY(6px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ─── Быстрые кнопки-подсказки ─── */
+.chat__quick-replies {
+    align-self: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 2px;
+    animation: chat-msg-in 0.3s ease-out;
+}
+
+.chat__quick {
+    padding: 9px 16px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    background: var(--chat-cream);
+    color: var(--chat-wine);
+    border: 1.5px solid var(--chat-wine);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.chat__quick:hover,
+.chat__quick:focus-visible {
+    background: var(--chat-gold);
+    border-color: var(--chat-wine-dark);
+    color: var(--chat-wine-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-accent-sm);
+}
+
+.chat__quick:active {
+    transform: translateY(0) scale(0.97);
+}
+
+/* ─── Индикатор «Продюсер печатает…» ─── */
+.chat__typing {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--chat-cream-soft);
+    border: 1px solid rgba(212, 165, 116, 0.45);
+    border-radius: 18px 18px 18px 4px;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.chat__typing-dots {
+    display: inline-flex;
+    gap: 3px;
+}
+
+.chat__typing-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-full);
+    background: var(--chat-wine);
+    animation: chat-typing-bounce 1s ease-in-out infinite;
+}
+
+.chat__typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.chat__typing-dots span:nth-child(3) { animation-delay: 0.30s; }
+
+@keyframes chat-typing-bounce {
+    0%, 40%, 100% { transform: translateY(0);    opacity: 0.4; }
+    20%           { transform: translateY(-4px); opacity: 1; }
+}
+
+/* ─── Сообщение о недоступности голоса ─── */
+.chat__mic-hint {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    padding: 2px 0 0 4px;
+    min-height: 1px;
+}
+
+/* ═══════════════════════════════════════════
+   ОБЛАСТЬ ВВОДА
+═══════════════════════════════════════════ */
+.chat__input-area {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: var(--space-sm);
+    border-top: 1px solid var(--color-border);
+    background: var(--chat-cream);
+    flex-shrink: 0;
+}
+
+.chat__input {
+    flex: 1 1 auto;
+    min-height: 44px;
+    max-height: 120px;
+    padding: 12px 16px;
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: 1.4;
+    color: var(--color-text);
+    background: #fff;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    resize: none;
+    transition: var(--transition-fast);
+}
+
+.chat__input:focus {
+    outline: none;
+    border-color: var(--chat-wine);
+    box-shadow: 0 0 0 3px rgba(122, 28, 62, 0.15);
+}
+
+.chat__input::placeholder {
+    color: var(--color-text-light);
+}
+
+/* ─── Кнопка микрофона ─── */
+.chat__mic {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    background: linear-gradient(135deg, var(--chat-wine), var(--chat-wine-dark));
+    color: #fff;
+    border: 2px solid var(--chat-gold);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.chat__mic:hover,
+.chat__mic:focus-visible {
+    transform: scale(1.06);
+    box-shadow: var(--shadow-accent-md);
+}
+
+.chat__mic:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* Запись: пульсация */
+.chat__mic.is-recording {
+    animation: chat-mic-pulse 1s ease-in-out infinite;
+    background: linear-gradient(135deg, var(--chat-wine-dark), var(--chat-wine));
+}
+
+@keyframes chat-mic-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(212, 165, 116, 0.65); }
+    50%  { box-shadow: 0 0 0 14px rgba(212, 165, 116, 0.25); }
+    100% { box-shadow: 0 0 0 0 rgba(212, 165, 116, 0); }
+}
+
+/* ─── Кнопка отправки (самолётик) ─── */
+.chat__send {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: var(--chat-gold);
+    color: var(--chat-wine-dark);
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.chat__send:hover,
+.chat__send:focus-visible {
+    background: var(--chat-gold-dark);
+    color: #fff;
+    transform: scale(1.06);
+    box-shadow: var(--shadow-accent-md);
+}
+
+.chat__send svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+/* ═══════════════════════════════════════════
+   АДАПТИВ
+═══════════════════════════════════════════ */
+@media (min-width: 1024px) {
+    .chat { height: min(620px, calc(100vh - 280px)); }
+}
+
+@media (max-width: 767px) {
+    .chat {
+        height: calc(100vh - 300px);
+        min-height: 420px;
+        border-radius: var(--radius-lg);
+    }
+
+    .chat__messages {
+        padding: var(--space-sm);
+    }
+
+    .chat__msg-bot,
+    .chat__msg-user {
+        max-width: 88%;
+    }
+
+    .chat__avatar { width: 44px; height: 44px; font-size: 22px; }
+
+    .chat__mic,
+    .chat__send { width: 48px; height: 48px; }
+
+    .chat__input-area {
+        gap: 8px;
+        padding: 10px 12px;
+    }
+}
