@@ -23,6 +23,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../includes/security.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // ─── Только POST ───
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -106,9 +107,16 @@ if (str_contains($reply, '[LEAD_CAPTURED]')) {
     // Внимание: в PHP 8.5 сигнатура str_replace(search, replace, subject)
     $reply = trim(str_replace('[LEAD_CAPTURED]', '', $reply));
 
-    // ═══ ЛИД СОБРАН (заглушка) ═══
-    // TODO: Задача №3 — сохранять бриф в таблицу orders/CRM + уведомление менеджеру.
-    log_lead_captured($client_ip, $history);
+    // ═══ ЛИД СОБРАН → сохраняем в БД (orders) ═══
+    // Лид без телефона не сохраняем (save_ai_lead вернёт 0) — ждём номер.
+    if (!($_SESSION['lead_saved'] ?? false)) {
+        $lead_id = save_ai_lead($client_ip, $history);
+        if ($lead_id > 0) {
+            $_SESSION['lead_saved'] = true;
+        }
+    } else {
+        log_error('save_ai_lead: повторный LEAD_CAPTURED в той же сессии — пропуск (уже сохранено)');
+    }
 }
 
 send_json([
@@ -147,7 +155,12 @@ function ai_system_prompt(): string
 После выбора тарифа (или если клиент готов), запроси номер телефона или Telegram/WhatsApp. Скажи, что это нужно, чтобы скинуть демо-версию песни.
 
 ШАГ 4. Финал.
-Когда клиент написал свой номер телефона, поблагодари его и в КОНЦЕ своего ответа ОБЯЗАТЕЛЬНО напиши системную фразу (прямо в тексте): [LEAD_CAPTURED]
+Когда клиент написал свой номер телефона (ЦИФРЫ, например +7 999 123-45-67), поблагодари его и в КОНЦЕ своего ответа ОБЯЗАТЕЛЬНО напиши системную фразу (прямо в тексте): [LEAD_CAPTURED]
+
+ВАЖНО ПРО ТЕГ [LEAD_CAPTURED]:
+- НИКОГДА не используй [LEAD_CAPTURED], пока клиент НЕ дал номер телефона цифрами.
+- Выбор тарифа — это ещё НЕ лид. Сначала спроси номер: "Чтобы скинуть демо, подскажите номер телефона или Telegram/WhatsApp" — и жди ответа.
+- Только после получения номера (цифр) благодари и ставь тег. Один тег — один раз.
 
 ЗАПРЕТЫ:
 - Не задавай больше одного вопроса за раз.
@@ -338,23 +351,224 @@ function ai_chat_deepseek(array $history): ?string
 }
 
 /**
- * Лог собранного лида (заглушка под CRM).
+ * Сохранение лида из AI-чата в таблицу orders.
+ * Парсит из истории диалога: телефон, повод, имя героя, жанр, тариф, полный диалог.
  *
  * @param string $ip      IP клиента
- * @param array  $history Итоговая история диалога
+ * @param array  $history Итоговая история диалога [{role, content}]
+ * @return int id новой записи, или 0 при ошибке
  */
-function log_lead_captured(string $ip, array $history): void
+function save_ai_lead(string $ip, array $history): int
 {
-    $entry = json_encode([
-        'ts'      => date('Y-m-d H:i:s'),
-        'ip'      => $ip,
-        'history' => $history,
-    ]);
+    // ─── Собираем текст от пользователя и полный текст ───
+    $user_msgs = [];
+    $full_text = '';
+    foreach ($history as $m) {
+        $content = (string)($m['content'] ?? '');
+        if ($content === '') continue;
+        $full_text .= ' ' . $content;
+        if (($m['role'] ?? '') === 'user') {
+            $user_msgs[] = $content;
+        }
+    }
+    $all = mb_strtolower($full_text);
+    $user_joined = implode('. ', $user_msgs);
+    // Для фактов о заказе (жанр, голос, тариф) — ТОЛЬКО слова клиента,
+    // иначе AI сам перечислит варианты и получим ложные срабатывания
+    $user_all = mb_strtolower($user_joined);
 
-    $log_dir = APP_ROOT . '/logs';
-    ensure_directory($log_dir, 0750);
+    // ─── Телефон (последний найденный) ───
+    $phone = '';
+    if (preg_match('/(\\+?[7-8][0-9\\s\\-()]{9,14})/u', $user_joined, $pm) === 1) {
+        $phone = mb_substr(preg_replace('/\\D+/', '', $pm[1]), 0, 20);
+    }
 
-    file_put_contents($log_dir . '/leads.log', $entry . "\n", FILE_APPEND | LOCK_EX);
+    // ─── Telegram / WhatsApp ───
+    $telegram = '';
+    $whatsapp = '';
+    if (preg_match('/(?:@|t\\.me/)([a-zA-Z0-9_]{4,})/u', $user_joined, $pm) === 1) {
+        $tg = $pm[1];
+        if (preg_match('/^[0-9]+$/', $tg) !== 1) $telegram = $tg;
+    }
+    if (preg_match('/(?:wa\\.me/|whatsapp\\s*)([0-9\\+\\s-]{7,})/iu', $user_joined, $pm) === 1) {
+        $whatsapp = mb_substr(preg_replace('/\\D+/', '', $pm[1]), 0, 20);
+    }
 
-    log_error('LEAD_CAPTURED: ip=' . $ip . ' msgs=' . count($history));
+    // ─── Повод ───
+    $occasion = 'other';
+    $occasion_order = [
+        ['wedding',     ['свадьб', 'жених', 'невест', 'свадебн']],
+        ['anniversary', ['годовщин', 'юбил', 'юбилей', 'год вместе']],
+        ['birthday',    ['день рожд', 'др ', 'праздник']],
+        ['corporate',   ['корпорат', 'коллектив', 'офис']],
+        ['new_year',    ['новый год']],
+        ['graduation',  ['выпускн', 'выпускн']],
+    ];
+    foreach ($occasion_order as $pair) {
+        foreach ($pair[1] as $kw) {
+            if (str_contains($all, $kw)) {
+                $occasion = $pair[0];
+                break 2; // break оба foreach
+            }
+        }
+    }
+
+    // ─── Имя героя: "зовут Сергей" / "брата Сергей" ───
+    $hero_name = '';
+    if (preg_match('/(?:зовут|звать|героя зовут)\\s+([А-ЯЁ][а-яё]+)/u', $full_text, $pm) === 1) {
+        $hero_name = $pm[1];
+    }
+    if ($hero_name === '' && preg_match('/(?:брат|сестр|мам|пап|жен|муж|сын|доч|дяд|тёт|дед|бабушк|невест|жених|друг|коллег)\\s+([А-ЯЁ][а-яё]+)/u', $full_text, $pm) === 1) {
+        $hero_name = $pm[1];
+    }
+
+    // ─── Возраст: "ему 35" / "ей 30" / "35 лет" ───
+    $hero_age = 0;
+    if (preg_match('/(\\d{1,2})\\s*(?:лет|год|года)/u', $all, $pm) === 1) {
+        $hero_age = (int)$pm[1];
+    }
+    if ($hero_age === 0 && preg_match('/(?:ей|ему|ему)\\s+(\\d{1,2})/u', $user_all, $pm) === 1) {
+        $hero_age = (int)$pm[1];
+    }
+
+    // ─── Кем приходится (ТОЛЬКО слова клиента; корень + русские окончания + граница слева) ───
+    // Убираем "мужской/женский голос" — иначе "муж" от "мужской голос" даёт ложную связь
+    $rel_text = str_replace('мужской голос', '', $user_all);
+    $rel_text = str_replace('женский голос', '', $rel_text);
+    $rel_map = [
+        ['свекров', 'свекровь'], ['бабушк', 'бабушка'], ['дедушк', 'дедушка'],
+        ['невест', 'невеста'],   ['коллег', 'коллега'], ['подруг', 'подруга'],
+        ['сестр', 'сестра'],     ['жених', 'жених'],    ['мам', 'мама'],
+        ['пап', 'папа'],         ['жен', 'жена'],       ['муж', 'муж'],
+        ['сын', 'сын'],          ['доч', 'дочь'],       ['дяд', 'дядя'],
+        ['тёт', 'тётя'],         ['брат', 'брат'],      ['друг', 'друг'],
+    ];
+    $hero_relation = '';
+    foreach ($rel_map as $pair) {
+        // Корень + до 4 букв окончания; слева НЕ буква (защита "обра..."→"брат")
+        $pattern = '/(^|[^а-яё])' . $pair[0] . '[а-яё]{0,4}([^а-яё]|$)/u';
+        if (preg_match($pattern, $rel_text) === 1) {
+            $hero_relation = $pair[1];
+            break;
+        }
+    }
+
+    // ─── Хобби: "любит ..." / "увлекается ..." (только клиент) ───
+    $hero_hobbies = '';
+    if (preg_match('/(?:любит|увлекается|занимается) ([^.?!]{5,80})/u', $user_all, $pm) === 1) {
+        $hero_hobbies = trim(mb_substr($pm[1], 0, 200));
+    }
+    if ($hero_hobbies === '' && preg_match('/(?:рокер|рыбак|спортсмен|танцор|музыкант)[^.,!?]{0,40}/u', $user_all, $pm) === 1) {
+        $hero_hobbies = trim($pm[0]);
+    }
+    // Чистим хвост "...мужской голос" / "...женский голос"
+    $hero_hobbies = str_replace('мужской голос', '', $hero_hobbies);
+    $hero_hobbies = str_replace('женский голос', '', $hero_hobbies);
+    $hero_hobbies = trim(preg_replace('/[,;\s]+$/', '', $hero_hobbies));
+
+    // ─── Жанр (музыкальные стили, массив) — по тексту клиента ───
+    $style_map = [
+        ['рок',     'rock'],     ['рэп',  'rap'],
+        ['хип-хоп','hip-hop'],   ['поп',  'pop'],
+        ['шансон', 'chanson'],   ['лирик','lyrical'],
+        ['джаз',   'jazz'],      ['фолк', 'folk'],
+    ];
+    $styles = [];
+    foreach ($style_map as $pair) {
+        if (str_contains($user_all, $pair[0]) && !in_array($pair[1], $styles, true)) {
+            $styles[] = $pair[1];
+        }
+    }
+    $music_styles = empty($styles) ? null : json_encode($styles);
+
+    // ─── Голос (по тексту клиента) ───
+    $voice_type = '';
+    if (str_contains($user_all, 'муж')) $voice_type = 'male';
+    elseif (str_contains($user_all, 'жен')) $voice_type = 'female';
+
+    // ─── Тариф (по тексту клиента) ───
+    $tariff = 'unknown';
+    if (str_contains($user_all, 'корпорат')) $tariff = 'corporate';
+    elseif (str_contains($user_all, 'преми') || str_contains($user_all, '10000') || str_contains($user_all, '10 000')) $tariff = 'premium';
+    elseif (str_contains($user_all, 'стандарт') || str_contains($user_all, '5000') || str_contains($user_all, '5 000')) $tariff = 'standard';
+    elseif (str_contains($user_all, 'базов') || str_contains($user_all, '2500') || str_contains($user_all, '2 500')) $tariff = 'basic';
+
+    // ─── История (краткое изложение из сообщений клиента) ───
+    $story = mb_substr($user_joined, 0, 3000);
+    if ($story === '') $story = 'Заявка из AI-чата (без текста) ' . date('Y-m-d H:i');
+
+    // ─── Полный диалог JSON ───
+    $chat_dialog = json_encode(['history' => $history, 'saved_at' => date('Y-m-d H:i:s')]);
+
+    // ─── Технические ───
+    $ua = mb_substr((string)($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 500);
+    $referrer = mb_substr((string)($_SERVER['HTTP_REFERER'] ?? ''), 0, 500);
+
+    // ─── Принимаем лид ТОЛЬКО если есть телефон ───
+    if ($phone === '') {
+        log_error('save_ai_lead: [LEAD_CAPTURED] без телефона — лид не сохранён, ждём номер');
+        return 0;
+    }
+
+    $tmp_number = 'TMP-C-' . bin2hex(random_bytes(6));
+
+    try {
+        $db = Database::getInstance();
+        $order_id = $db->insert(
+            "INSERT INTO orders
+            (order_number, occasion, hero_name, hero_age, hero_relation,
+             hero_hobbies, story, music_styles, voice_type, tariff,
+             client_name, client_phone, client_telegram, client_whatsapp,
+             chat_dialog, chat_source,
+             ip_address, user_agent, referrer)
+            VALUES
+            (:order_number, :occasion, :hero_name, :hero_age, :hero_relation,
+             :hero_hobbies, :story, :music_styles, :voice_type, :tariff,
+             :client_name, :client_phone, :client_telegram, :client_whatsapp,
+             :chat_dialog, 'ai_chat',
+             :ip_address, :user_agent, :referrer)",
+            [
+                ':order_number'    => $tmp_number,
+                ':occasion'        => $occasion,
+                ':hero_name'       => $hero_name !== '' ? $hero_name : 'Не указан',
+                ':hero_age'        => $hero_age > 0 ? $hero_age : null,
+                ':hero_relation'   => $hero_relation !== '' ? $hero_relation : null,
+                ':hero_hobbies'    => $hero_hobbies !== '' ? $hero_hobbies : null,
+                ':story'           => $story,
+                ':music_styles'    => $music_styles,
+                ':voice_type'      => $voice_type !== '' ? $voice_type : null,
+                ':tariff'          => $tariff,
+                ':client_name'     => 'Клиент AI-чата',
+                ':client_phone'    => $phone,
+                ':client_telegram' => $telegram !== '' ? $telegram : null,
+                ':client_whatsapp' => $whatsapp !== '' ? $whatsapp : null,
+                ':chat_dialog'     => $chat_dialog,
+                ':ip_address'      => $ip,
+                ':user_agent'      => $ua,
+                ':referrer'        => $referrer,
+            ]
+        );
+
+        // Номер HP-XXXXX по id (как в submit-order)
+        $db->execute(
+            "UPDATE orders SET order_number = :num WHERE id = :id",
+            [':num' => 'HP-' . str_pad((string)$order_id, 5, '0', STR_PAD_LEFT), ':id' => $order_id]
+        );
+
+        log_error(sprintf('save_ai_lead: OK id=%s phone=%s occasion=%s tariff=%s', $order_id, $phone, $occasion, $tariff));
+        return (int)$order_id;
+    } catch (Throwable $e) {
+        log_error('save_ai_lead: ОШИБКА: ' . $e->getMessage());
+
+        // Фолбэк — пишем в leads.log, чтобы не потерять лид
+        $entry = json_encode([
+            'ts'      => date('Y-m-d H:i:s'),
+            'ip'      => $ip,
+            'history' => $history,
+        ]);
+        $log_dir = APP_ROOT . '/logs';
+        ensure_directory($log_dir, 0750);
+        file_put_contents($log_dir . '/leads.log', $entry . "\n", FILE_APPEND | LOCK_EX);
+        return 0;
+    }
 }

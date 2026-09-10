@@ -232,3 +232,32 @@ function tag_uploaded_track(string $audio_filename, string $title, string $descr
         return false;
     }
 }
+
+/**
+ * Красивый вывод музыкальных стилей из JSON-колонки music_styles.
+ * @param ?string $json JSON-массив id стилей (["rock","pop"]) или null
+ * @return string "Рок, Поп" / "Не указаны"
+ */
+function format_music_styles(?string $json): string
+{
+    if ($json === null || $json === '') return 'Не указаны';
+    $ids = json_decode($json, true);
+    if (!is_array($ids) || empty($ids)) return (string)$json;
+
+    $names = [
+        'rock'    => 'Рок',
+        'pop'     => 'Поп',
+        'rap'     => 'Рэп',
+        'hip-hop' => 'Хип-хоп',
+        'chanson' => 'Шансон',
+        'lyrical' => 'Лирика',
+        'jazz'    => 'Джаз',
+        'folk'    => 'Фолк',
+        'classic' => 'Классика',
+    ];
+    $out = [];
+    foreach ($ids as $id) {
+        $out[] = $names[(string)$id] ?? (string)$id;
+    }
+    return implode(', ', $out);
+}

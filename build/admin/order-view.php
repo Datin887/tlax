@@ -177,7 +177,7 @@ require_once __DIR__ . '/includes/admin-header.php';
                     <?php endif; ?>
                     <div class="order-dl__row">
                         <dt>Связаться</dt>
-                        <dd><?= h(get_contact_time_label($order['contact_time'])) ?> — <?= h($order['contact_method']) ?></dd>
+                        <dd><?= h(get_contact_time_label((string)($order['contact_time'] ?? ''))) ?><?= $order['preferred_contact'] ? ' — ' . h($order['preferred_contact']) : '' ?></dd>
                     </div>
                 </dl>
             </div>
@@ -238,7 +238,7 @@ require_once __DIR__ . '/includes/admin-header.php';
                     <?php if ($order['music_styles']): ?>
                         <div class="order-dl__row">
                             <dt>Стиль</dt>
-                            <dd><?= h($order['music_styles']) ?></dd>
+                            <dd><?= h(format_music_styles($order['music_styles'])) ?></dd>
                         </div>
                     <?php endif; ?>
                     <div class="order-dl__row">
@@ -247,7 +247,7 @@ require_once __DIR__ . '/includes/admin-header.php';
                     </div>
                     <div class="order-dl__row">
                         <dt>Длительность</dt>
-                        <dd><?= h(get_duration_label($order['duration'])) ?></dd>
+                        <dd><?= h(get_duration_label((string)($order['duration_type'] ?? ''))) ?></dd>
                     </div>
                 </dl>
             </div>
@@ -282,6 +282,34 @@ require_once __DIR__ . '/includes/admin-header.php';
                 <?php endif; ?>
             </div>
         </div>
+
+        <?php if ($order['chat_source'] === 'ai_chat' && $order['chat_dialog']): ?>
+        <!-- Диалог AI-чата -->
+        <div class="admin-card">
+            <div class="admin-card__header">
+                <h2 class="admin-card__title">💬 Диалог AI-чата</h2>
+            </div>
+            <div class="admin-card__body">
+                <div class="order-chat-dialog">
+                <?php
+                    $dialog_data = json_decode((string)$order['chat_dialog'], true);
+                    $dialog_msgs = is_array($dialog_data) ? ($dialog_data['history'] ?? []) : [];
+                    foreach ($dialog_msgs as $dm):
+                        $drole = (string)($dm['role'] ?? '');
+                        $dtext = (string)($dm['content'] ?? '');
+                        if ($dtext === '') continue;
+                        $dclass = $drole === 'user' ? 'order-chat-msg order-chat-msg--user' : 'order-chat-msg order-chat-msg--bot';
+                        $dlabel = $drole === 'user' ? '👤 Клиент' : '🤖 Продюсер';
+                ?>
+                    <div class="<?= $dclass ?>">
+                        <span class="order-chat-msg__who"><?= $dlabel ?></span>
+                        <span class="order-chat-msg__text"><?= nl2br(h($dtext)) ?></span>
+                    </div>
+                <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
 
     </div><!-- /.order-view-main -->
 

@@ -58,7 +58,7 @@ try {
     $params[':offset'] = $offset;
 
     $orders = $db->fetchAll(
-        "SELECT id, order_number, client_name, client_phone, occasion, tariff, urgency, status, created_at
+        "SELECT id, order_number, client_name, client_phone, occasion, tariff, urgency, status, chat_source, created_at
          FROM orders
          {$where}
          ORDER BY created_at DESC
@@ -203,6 +203,9 @@ require_once __DIR__ . '/includes/admin-header.php';
                                     <a href="/admin/order-view.php?id=<?= (int)$order['id'] ?>" class="order-number">
                                         <?= h($order['order_number']) ?>
                                     </a>
+                                    <?php if (($order['chat_source'] ?? '') === 'ai_chat'): ?>
+                                        <span class="badge badge--ai-chat" title="Заявка из AI-чата">🤖 AI-чат</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <span class="admin-date">
