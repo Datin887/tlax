@@ -14,6 +14,7 @@ $nav_items = [
     ['file' => 'orders',     'icon' => '📋', 'label' => 'Заявки',   'href' => '/admin/orders.php'],
     ['file' => 'tracks',     'icon' => '🎵', 'label' => 'Треки',    'href' => '/admin/tracks.php'],
     ['file' => 'stats',      'icon' => '📈', 'label' => 'Статистика','href' => '/admin/stats.php'],
+    ['file' => 'tech',       'icon' => '🛠️', 'label' => 'Техничка',  'href' => '/admin/tech.php'],
 ];
 ?>
 <!DOCTYPE html>
